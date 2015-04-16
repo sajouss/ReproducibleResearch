@@ -1,26 +1,39 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-```{r processingdata, echo=TRUE}
+
+```r
 unzip("activity.zip","activity.csv")
 activity <- read.csv("activity.csv")
 
 #Cleanup our file
 file.remove("activity.csv")
+```
 
+```
+## [1] TRUE
+```
+
+```r
 head(activity)
+```
+
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
 ```
 
 
 ## What is mean total number of steps taken per day?
-```{r sumHistogram, echo=TRUE}
+
+```r
 steps.per.day <- aggregate(activity$steps,list(activity$date),sum)
 colnames(steps.per.day) <-c("Date","Steps")
 
@@ -32,6 +45,8 @@ hist(steps.per.day$Steps,
      main="Total Steps Taken Per Day",
      col=c("cyan"))
 ```
+
+![](PA1_template_files/figure-html/sumHistogram-1.png) 
 
 
 ## What is the average daily activity pattern?
