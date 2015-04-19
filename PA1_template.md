@@ -30,6 +30,14 @@ head(activity)
 ## 6    NA 2012-10-01       25
 ```
 
+```r
+nrow(activity)
+```
+
+```
+## [1] 17568
+```
+
 
 ## What is mean total number of steps taken per day?
 
@@ -99,6 +107,51 @@ L <- is.na(activity.no.NA$steps)
 # All of our NA rows
 naactivity <- activity.no.NA[L,]
 
+#Let's peek into the data we just custructed
+head(activity.no.NA)
+```
+
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
+```r
+nrow(activity.no.NA)
+```
+
+```
+## [1] 17568
+```
+
+```r
+head(naactivity)
+```
+
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
+```r
+nrow(naactivity)
+```
+
+```
+## [1] 2304
+```
+
+```r
 # naactivity's structure is such that the row names are actually the index of the rows in cc we can go through them and change the steps values from NA to the mean of that interval
 #row.names  steps    date	    interval
 #   1	        NA	2012-10-01	    0
@@ -106,6 +159,19 @@ naactivity <- activity.no.NA[L,]
 for(idx in as.integer(rownames(naactivity))) { 
   activity.no.NA[idx,]$steps <- as.integer(avg.number.steps.perinterval[as.character(activity.no.NA[idx,3])]) 
 }
+
+#Let's peek into activity.no.NA
+head(activity.no.NA)
+```
+
+```
+##   steps       date interval
+## 1     1 2012-10-01        0
+## 2     0 2012-10-01        5
+## 3     0 2012-10-01       10
+## 4     0 2012-10-01       15
+## 5     0 2012-10-01       20
+## 6     2 2012-10-01       25
 ```
 
 Histogram of the total number of stepst aken each day, with our new data with no NA values
@@ -119,15 +185,20 @@ median.steps.daily2 <- median(steps.per.day.no.NA$Steps,na.rm=TRUE)
 
 x <-steps.per.day.no.NA$Steps
 
+#Lest's peek into x
+head(x)
+```
 
+```
+## [1] 10641   126 11352 12116 13294 15420
+```
+
+```r
 h<-hist(x,
      xlab="Sum of Steps",
      breaks=20,
      main="Total Steps Taken Per Day",
      col=c("cyan"))
-#abline(v=mean(mean.steps.daily2,rm.na=TRUE),col=c("red"),lwd=2)
-#abline(v=mean(mean.steps.daily1,rm.na=TRUE),col=c("blue"),lwd=2)
-#abline(v=mean(median.steps.daily1,rm.na=TRUE),col=c("green"),lwd=2)
 abline(v=mean(median.steps.daily1,rm.na=TRUE),col=c("red"),lwd=2)
 
 xfit<-seq(min(x),max(x),length=25000) 

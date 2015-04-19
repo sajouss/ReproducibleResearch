@@ -16,6 +16,8 @@ activity <- read.csv("activity.csv")
 file.remove("activity.csv")
 
 head(activity)
+
+nrow(activity)
 ```
 
 
@@ -74,6 +76,17 @@ L <- is.na(activity.no.NA$steps)
 # All of our NA rows
 naactivity <- activity.no.NA[L,]
 
+#Let's peek into the data we just custructed
+head(activity.no.NA)
+
+nrow(activity.no.NA)
+
+head(naactivity)
+
+nrow(naactivity)
+
+
+
 # naactivity's structure is such that the row names are actually the index of the rows in cc we can go through them and change the steps values from NA to the mean of that interval
 #row.names  steps    date	    interval
 #   1	        NA	2012-10-01	    0
@@ -81,6 +94,9 @@ naactivity <- activity.no.NA[L,]
 for(idx in as.integer(rownames(naactivity))) { 
   activity.no.NA[idx,]$steps <- as.integer(avg.number.steps.perinterval[as.character(activity.no.NA[idx,3])]) 
 }
+
+#Let's peek into activity.no.NA
+head(activity.no.NA)
 
 ```
 
@@ -94,15 +110,14 @@ median.steps.daily2 <- median(steps.per.day.no.NA$Steps,na.rm=TRUE)
 
 x <-steps.per.day.no.NA$Steps
 
+#Lest's peek into x
+head(x)
 
 h<-hist(x,
      xlab="Sum of Steps",
      breaks=20,
      main="Total Steps Taken Per Day",
      col=c("cyan"))
-#abline(v=mean(mean.steps.daily2,rm.na=TRUE),col=c("red"),lwd=2)
-#abline(v=mean(mean.steps.daily1,rm.na=TRUE),col=c("blue"),lwd=2)
-#abline(v=mean(median.steps.daily1,rm.na=TRUE),col=c("green"),lwd=2)
 abline(v=mean(median.steps.daily1,rm.na=TRUE),col=c("red"),lwd=2)
 
 xfit<-seq(min(x),max(x),length=25000) 

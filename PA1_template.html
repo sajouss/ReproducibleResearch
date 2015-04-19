@@ -71,6 +71,8 @@ file.remove(&quot;activity.csv&quot;)</code></pre>
 ## 4    NA 2012-10-01       15
 ## 5    NA 2012-10-01       20
 ## 6    NA 2012-10-01       25</code></pre>
+<pre class="r"><code>nrow(activity)</code></pre>
+<pre><code>## [1] 17568</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
@@ -128,13 +130,44 @@ L &lt;- is.na(activity.no.NA$steps)
 # All of our NA rows
 naactivity &lt;- activity.no.NA[L,]
 
-# naactivity's structure is such that the row names are actually the index of the rows in cc we can go through them and change the steps values from NA to the mean of that interval
+#Let's peek into the data we just custructed
+head(activity.no.NA)</code></pre>
+<pre><code>##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25</code></pre>
+<pre class="r"><code>nrow(activity.no.NA)</code></pre>
+<pre><code>## [1] 17568</code></pre>
+<pre class="r"><code>head(naactivity)</code></pre>
+<pre><code>##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25</code></pre>
+<pre class="r"><code>nrow(naactivity)</code></pre>
+<pre><code>## [1] 2304</code></pre>
+<pre class="r"><code># naactivity's structure is such that the row names are actually the index of the rows in cc we can go through them and change the steps values from NA to the mean of that interval
 #row.names  steps    date       interval
 #   1           NA  2012-10-01      0
 
 for(idx in as.integer(rownames(naactivity))) { 
   activity.no.NA[idx,]$steps &lt;- as.integer(avg.number.steps.perinterval[as.character(activity.no.NA[idx,3])]) 
-}</code></pre>
+}
+
+#Let's peek into activity.no.NA
+head(activity.no.NA)</code></pre>
+<pre><code>##   steps       date interval
+## 1     1 2012-10-01        0
+## 2     0 2012-10-01        5
+## 3     0 2012-10-01       10
+## 4     0 2012-10-01       15
+## 5     0 2012-10-01       20
+## 6     2 2012-10-01       25</code></pre>
 <p>Histogram of the total number of stepst aken each day, with our new data with no NA values</p>
 <pre class="r"><code>steps.per.day.no.NA &lt;- aggregate(activity.no.NA$steps,list(activity.no.NA$date),sum)
 colnames(steps.per.day.no.NA) &lt;-c(&quot;Date&quot;,&quot;Steps&quot;)
@@ -143,15 +176,14 @@ median.steps.daily2 &lt;- median(steps.per.day.no.NA$Steps,na.rm=TRUE)
 
 x &lt;-steps.per.day.no.NA$Steps
 
-
-h&lt;-hist(x,
+#Lest's peek into x
+head(x)</code></pre>
+<pre><code>## [1] 10641   126 11352 12116 13294 15420</code></pre>
+<pre class="r"><code>h&lt;-hist(x,
      xlab=&quot;Sum of Steps&quot;,
      breaks=20,
      main=&quot;Total Steps Taken Per Day&quot;,
      col=c(&quot;cyan&quot;))
-#abline(v=mean(mean.steps.daily2,rm.na=TRUE),col=c(&quot;red&quot;),lwd=2)
-#abline(v=mean(mean.steps.daily1,rm.na=TRUE),col=c(&quot;blue&quot;),lwd=2)
-#abline(v=mean(median.steps.daily1,rm.na=TRUE),col=c(&quot;green&quot;),lwd=2)
 abline(v=mean(median.steps.daily1,rm.na=TRUE),col=c(&quot;red&quot;),lwd=2)
 
 xfit&lt;-seq(min(x),max(x),length=25000) 
