@@ -1,0 +1,56 @@
+---
+title: "Storm Impact on population health and the economy"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r processingdata,echo=TRUE,cache=TRUE }
+
+if("stringi" %in% rownames(installed.packages()) == FALSE) {install.packages("stringi")}
+
+storm_data <- read.csv("repdata-data-StormData.csv.bz2", stringsAsFactors=FALSE)
+
+head(storm_data)
+```
+
+Let's only keep the data that we need for our analysis. Such as the EVTYPE for the events, FATALITIES, and INIJURIES for the population health, and anything starting with PROP and CROP for the economic consequences.
+
+The result will then be saved in the a variable called storm.data. Note that it is not necessary to keep location data such as the State is not since the analysis is for all of the US.
+
+```{r, echo=TRUE,cache=TRUE}
+relevant.coplumns <- c("EVTYPE", "FATALITIES", "INJURIES", "PROPDMG", "PROPDMGEXP", "CROPDMG", 
+    "CROPDMGEXP")
+
+storm.data <- storm_data[relevant.coplumns]
+
+summary(storm.data)
+```
+
+```{r, echo=TRUE,cache=TRUE }
+fatalities.per.event <- aggregate(FATALITIES ~ EVTYPE, data=storm.data, FUN=sum)
+fatalities.per.event <- fatalities.per.event[order(fatalities.per.event$FATALITIES, decreasing=TRUE),]
+injuries.per.event <- aggregate(INJURIES ~ EVTYPE, data=storm.data, FUN=sum)
+injuries.per.event <- injuries.per.event[order(injuries.per.event$INJURIES, decreasing=TRUE),]
+
+library(stringi)
+fatalities.per.event$EVTYPE <- stri_trans_totitle(fatalities.per.event$EVTYPE)
+injuries.per.event$EVTYPE <- stri_trans_totitle(injuries.per.event$EVTYPE)
+                                                
+                                                
+head(fatalities.per.event,15)
+head(injuries.per.event,15)
+##summary(fatalities.per.event)
+
+unique(storm.data$PROPDMGEXP)
+```
+Looking at the top 15 I determined that it was good enough to get the top 5 events that have caused fatalities and injuries
+
+```{r,echo=TRUE,cache=TRUE}
+fatalities.top.5 <- fatalities.per.event[1:5,]
+injuries.top5 <- injuries.per.event[1:5,]
+
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
